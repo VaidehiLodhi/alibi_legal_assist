@@ -107,3 +107,4 @@ function getDescription(point: Position): string {
 
     return `${region} - Estimated depth: ${Math.round(depth)}m`;
 }
+

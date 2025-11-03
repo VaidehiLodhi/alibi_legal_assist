@@ -16,45 +16,66 @@ export const processChatMessage = inngest.createFunction(
   async ({ event, step }) => {
     const { messageId, projectId, userMessage } = event.data;
 
-    // Call your Langflow RAG model http://localhost:7860/api/v1/run/dfb9e75e-1341-407e-9d58-7bf81ed5f861
-    const ragResponse = await step.run("call-langflow-rag", async () => {
-      const response = await fetch(`${process.env.LANGFLOW_API_URL}/api/v1/run/dfb9e75e-1341-407e-9d58-7bf81ed5f861`, {
+    // Call Gemini chat API
+    const ragResponse = await step.run("call-gemini-chat", async () => {
+      const apiKey = process.env.GEMINI_API_KEY;
+      if (!apiKey) {
+        throw new Error("GEMINI_API_KEY is not set");
+      }
+
+      const endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+
+      const payload = {
+        contents: [
+          {
+            parts: [
+              {
+                text: String(userMessage ?? ""),
+              },
+            ],
+          },
+        ],
+      } as const;
+
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "X-goog-api-key": apiKey,
         },
-        body: JSON.stringify({
-          input_value: userMessage,
-          output_type: "chat",
-          input_type: "chat",
-        }),
+        body: JSON.stringify(payload),
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error(`Langflow API error: ${response.status} - ${errorText}`);
-        throw new Error(`Langflow API error: ${response.status} - ${errorText}`);
+      const raw = await response.text();
+      let data: any = null;
+      try {
+        data = raw ? JSON.parse(raw) : null;
+      } catch (err) {
+        const preview = raw.slice(0, 300);
+        throw new Error(`Gemini response not JSON (${response.status}): ${preview}`);
       }
 
-      const data = await response.json();
-      console.log("Langflow response:", data);
+      if (!response.ok) {
+        const preview = typeof data === "object" ? JSON.stringify(data).slice(0, 300) : String(raw).slice(0, 300);
+        throw new Error(`Gemini API error ${response.status}: ${preview}`);
+      }
 
-      // Extract the response from the complex Langflow structure
+      // Extract text from Gemini response
       try {
-        const responseText = data.outputs?.[0]?.outputs?.[0]?.text ||
-          data.outputs?.[0]?.outputs?.[0]?.results?.message?.text ||
-          data.output ||
-          data.result ||
-          data.data;
+        const partsArray = data?.candidates?.[0]?.content?.parts;
+        const joined = Array.isArray(partsArray)
+          ? partsArray.map((p: any) => (p && typeof p.text === "string" ? p.text : "")).filter(Boolean).join("\n")
+          : "";
+        const primary = joined || data?.output_text || data?.text || "";
 
-        if (responseText) {
-          return responseText;
-        } else {
-          console.error("Could not extract response from Langflow data:", data);
-          return "Sorry, I couldn't generate a response.";
-        }
+        const sanitized = String(primary)
+          .replace(/[\u0000-\u001F\u007F]/g, "")
+          .trim()
+          .slice(0, 20000);
+
+        return sanitized.length > 0 ? sanitized : "Sorry, I couldn't generate a response.";
       } catch (error) {
-        console.error("Error parsing Langflow response:", error);
+        console.error("Error parsing Gemini response:", error);
         return "Sorry, I couldn't generate a response.";
       }
     });

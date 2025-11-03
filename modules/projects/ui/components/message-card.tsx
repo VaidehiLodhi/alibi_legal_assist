@@ -12,8 +12,8 @@ interface UserMessageProps {
 
 const UserMessage =({content}: UserMessageProps)=> {
     return (
-      <div className="flex justify-end pb-4 pr-2 pl-10">
-        <Card className="rounded-lg text-[#EBEBEB] p-3 shadow-none border-none max-w-[80%] break-words bg-[#393939]">
+      <div className="flex justify-end border-gray-500 pb-4 pr-2 pl-10">
+        <Card className="rounded-lg text-black font-normal p-3 shadow-none border-1 border-[#ff7441] max-w-[80%] break-words bg-[#FFF8F6]">
           {content}
         </Card>
       </div>
@@ -37,6 +37,56 @@ const AssistantMessage =({
     onFragmentClick,
     type,
 } : AssistantMessageProps) => {
+    // Heuristically format a big paragraph into Markdown sections & bullet points
+    const formatAlibiMarkdown = (raw: string) => {
+        if (!raw) return raw;
+        // If it's already markdown with lists or headings, keep it
+        if (/\n-\s|\n\*\s|^#|```/m.test(raw)) return raw;
+
+        let s = raw.trim();
+        // Promote common labels to headings
+        const labels = [
+            "summary",
+            "context",
+            "facts",
+            "evidence",
+            "analysis",
+            "risk",
+            "recommendation",
+            "next steps",
+            "conclusion",
+            "timeline",
+            "dates",
+            "lawyer",
+        ];
+        for (const label of labels) {
+            const re = new RegExp(`(?:^|\n)\s*${label}\s*:`, "ig");
+            s = s.replace(re, (m) => `\n\n### ${label.replace(/\b\w/g, c => c.toUpperCase())}\n`);
+        }
+
+        // Split into paragraphs, convert each non-heading paragraph into bullet list
+        const paragraphs = s.split(/\n\n+/).map((p) => p.trim()).filter(Boolean);
+        const toBullets = (text: string) => {
+            // Split sentences
+            const sentences = text
+                .replace(/\s+/g, " ")
+                .split(/(?<=[\.!?])\s+/)
+                .map((t) => t.trim())
+                .filter((t) => t.length > 0);
+            if (sentences.length <= 1) return `- ${text}`;
+            return sentences.map((t) => `- ${t}`).join("\n");
+        };
+        const out: string[] = [];
+        for (const p of paragraphs) {
+            if (/^#{2,3}\s/.test(p)) {
+                out.push(p); // heading block
+            } else {
+                out.push(toBullets(p));
+            }
+        }
+        return out.join("\n\n");
+    };
+    const formatted = formatAlibiMarkdown(content);
     return (
       <div
         className={cn(
@@ -46,13 +96,13 @@ const AssistantMessage =({
       >
         <div className="flex items-center gap-2 pl-2 mb-2 rounded-lg">
           {/*TODO: add logo */}
-          <span className="text-sm font-bold text-[#EBEBEB]">FloatChat</span>
-          <span className="text-xs text-black opacity-0 transition-opacity group-hover:opacity-100">
+          <span className="text-normal font-bold text-[#4184F4]">ALIBI</span>
+          <span className="text-xs text-gray-900">
             {format(createdAt, "HH:mm 'on' MMM dd, yyyy")}
           </span>
         </div>
-        <div className="pl-8.5 flex p-4 flex-col text-[#EBEBEB] bg-[#393939] font-bold gap-y-4 rounded-lg">
-          <MarkdownRenderer content={content} />
+        <div className="pl-8.5 flex p-4 flex-col text-black border-[#4184F4] border-1 bg-[#F6FAFE] font-normal gap-y-4 rounded-lg">
+          <MarkdownRenderer className="text-black" content={formatted} />
         </div>
       </div>
     );

@@ -59,4 +59,14 @@ model Project {
   updatedAt DateTime @updatedAt
 
   messages Message[]
+  contactInfo ContactInfo?
+}
+
+model ContactInfo {
+  id String @id @default(uuid())
+  gmailAddress String @unique
+  projectId String @unique
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

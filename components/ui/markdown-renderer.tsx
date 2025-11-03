@@ -19,46 +19,46 @@ export const MarkdownRenderer = ({ content, className }: MarkdownRendererProps) 
         components={{
           // Headings
           h1: ({ children, ...props }) => (
-            <h1 className="text-2xl font-bold text-[#EBEBEB] mb-4 mt-6 first:mt-0 border-b border-gray-600 pb-2" {...props}>
+            <h1 className="text-2xl font-bold  mb-4 mt-6 first:mt-0 border-b border-gray-600 pb-2" {...props}>
               {children}
             </h1>
           ),
           h2: ({ children, ...props }) => (
-            <h2 className="text-xl font-semibold text-[#EBEBEB] mb-3 mt-5 first:mt-0" {...props}>
+            <h2 className="text-xl font-semibold  mb-3 mt-5 first:mt-0" {...props}>
               {children}
             </h2>
           ),
           h3: ({ children, ...props }) => (
-            <h3 className="text-lg font-medium text-[#EBEBEB] mb-2 mt-4 first:mt-0" {...props}>
+            <h3 className="text-lg font-medium  mb-2 mt-4 first:mt-0" {...props}>
               {children}
             </h3>
           ),
           h4: ({ children, ...props }) => (
-            <h4 className="text-base font-medium text-[#EBEBEB] mb-2 mt-3 first:mt-0" {...props}>
+            <h4 className="text-base font-medium  mb-2 mt-3 first:mt-0" {...props}>
               {children}
             </h4>
           ),
           
           // Paragraphs
           p: ({ children, ...props }) => (
-            <p className="text-[#EBEBEB] mb-3 leading-relaxed" {...props}>
+            <p className=" mb-3 leading-relaxed" {...props}>
               {children}
             </p>
           ),
           
           // Lists
           ul: ({ children, ...props }) => (
-            <ul className="list-disc list-inside mb-4 space-y-1 text-[#EBEBEB]" {...props}>
+            <ul className="list-disc list-inside mb-4 space-y-1" {...props}>
               {children}
             </ul>
           ),
           ol: ({ children, ...props }) => (
-            <ol className="list-decimal list-inside mb-4 space-y-1 text-[#EBEBEB]" {...props}>
+            <ol className="list-decimal list-inside mb-4 space-y-1" {...props}>
               {children}
             </ol>
           ),
           li: ({ children, ...props }) => (
-            <li className="text-[#EBEBEB] leading-relaxed" {...props}>
+            <li className=" leading-relaxed" {...props}>
               {children}
             </li>
           ),
@@ -121,7 +121,7 @@ export const MarkdownRenderer = ({ content, className }: MarkdownRendererProps) 
             </th>
           ),
           td: ({ children, ...props }) => (
-            <td className="px-4 py-2 text-[#EBEBEB] border-r border-gray-600 last:border-r-0" {...props}>
+            <td className="px-4 py-2 border-r border-gray-600 last:border-r-0" {...props}>
               {children}
             </td>
           ),
@@ -141,7 +141,7 @@ export const MarkdownRenderer = ({ content, className }: MarkdownRendererProps) 
           
           // Strong/Bold
           strong: ({ children, ...props }) => (
-            <strong className="font-bold text-[#EBEBEB]" {...props}>
+            <strong className="font-bold" {...props}>
               {children}
             </strong>
           ),
@@ -164,3 +164,4 @@ export const MarkdownRenderer = ({ content, className }: MarkdownRendererProps) 
     </div>
   );
 };
+

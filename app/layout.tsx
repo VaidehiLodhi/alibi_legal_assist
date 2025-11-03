@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { IBM_Plex_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import { TRPCReactProvider } from "@/trpc/client";
@@ -39,6 +40,11 @@ export const shinkaBoldFont = localFont({
   src: "./fonts/shinkamono_heavy.ttf",
 });
 
+const ibmPlexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700"],
+});
+
 
 // export const metadata: Metadata = {
 //   title: "Create Next App",
@@ -52,7 +58,7 @@ export default function RootLayout({
 }>) {
   return (
     <TRPCReactProvider>
-      <html lang="en" className={shinkaFont.className} suppressHydrationWarning>
+      <html lang="en" className={`${shinkaFont.className} ${ibmPlexMono.className}`} suppressHydrationWarning>
         <body>
           <ThemeProvider
             attribute="class"

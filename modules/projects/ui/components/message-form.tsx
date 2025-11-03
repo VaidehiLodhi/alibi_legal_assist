@@ -63,7 +63,7 @@ export const MessageForm = ({ projectId }: Props) => {
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className={cn(
-            "relative border p-4 pt-1 bg-[#393939] rounded-xl text-[#EBEBEB] dark:bg-sidebar transition-all",
+            "relative font-normal border-0 border-black p-4 pt-1 bg-white text-black",
             isFocused && "shadow-xs",
             showUsage && "rounded-t-none"
           )}
@@ -81,8 +81,8 @@ export const MessageForm = ({ projectId }: Props) => {
                 }}
                 minRows={2}
                 maxRows={8}
-                className="pt-4 resize-none border-none w-full outline-none bg-[#393939]"
-                placeholder="Let's explore the oceans together"
+                className="pt-4 resize-none border-none w-full outline-none bg-white"
+                placeholder="Let's make the law accessible!"
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
                     e.preventDefault();
@@ -93,7 +93,7 @@ export const MessageForm = ({ projectId }: Props) => {
             )}
           />
           <div className="flex gap-x-2 items-end justify-between pt-2">
-            <div className="text-[10px] text-muted-foreground font-mono">
+            <div className="text-sm text-muted-foreground font-mono">
               <kbd className="ml-auto pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-[#EBEBEB] px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
                 <span>&#8984;</span>Enter
               </kbd>

@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 
 const ShimmerMessages =()=> {
     const messages = [
-        "Octopuses are brainiacs and cuddly too!...",
-        "Generating....",
-        "Bringing u the knowledge from ocean depths...",
-        "Searching for the right pearl....",
-        "Almost ready....",
-        "Analyzing your request....",
+      "Making law accessible one node at a time!...",
+      "Generating....",
+      "Bringing u the knowledge from legal depths..",
+      "Searching for the right book....",
+      "Almost ready....",
+      "Analyzing your request....",
     ];
 
     const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
@@ -23,7 +23,7 @@ const ShimmerMessages =()=> {
 
     return (
         <div className="flex items-center gap-2">
-            <span className="text-base text-muted-foreground animate-pulse">
+            <span className="text-base font-medium text-[#4184F4] animate-pulse">
                 {messages[currentMessageIndex]}
             </span>
         </div>
@@ -41,8 +41,8 @@ export const MessageLoading =()=> {
                     height={18}
                     className="shrink-0"
                 /> */}
-                <span className="text-sm text-[#EBEBEB] font-bold">
-                    FloatChat
+                <span className="text-md text-[#4184F4] font-medium">
+                    Alibi
                 </span>
             </div>
             <div className="pl-8.5 flex flex-col gap-y-4">
